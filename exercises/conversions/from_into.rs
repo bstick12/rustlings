@@ -18,7 +18,6 @@ impl Default for Person {
     }
 }
 
-// I AM NOT DONE
 // Your task is to complete this implementation
 // in order for the line `let p = Person::from("Mark,20")` to compile
 // Please note that you'll need to parse the age component into a `usize`
@@ -34,6 +33,20 @@ impl Default for Person {
 // Otherwise, then return an instantiated Person onject with the results
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.len() == 0 {
+            return Person::default();
+        } else {
+            let mut split: Vec<&str> = s.splitn(2, ",").collect();
+            if let Ok(age) = split.pop().unwrap().parse::<usize>() {
+                let name = split.pop().unwrap();
+                Person {
+                    name: name.to_string(),
+                    age: age,
+                }
+            } else {
+                return Person::default();
+            }
+        }
     }
 }
 
@@ -69,5 +82,9 @@ mod tests {
         let p = Person::from("Mark,20");
         assert_eq!(p.name, "Mark");
         assert_eq!(p.age, 20);
+        let p = Person::from("Mark,20,d");
+        let dp = Person::default();
+        assert_eq!(dp.name, p.name);
+        assert_eq!(dp.age, p.age);
     }
 }
